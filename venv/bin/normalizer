@@ -1,0 +1,8 @@
+#!/media/giovani/b60fac53-771c-4765-bb57-46eba1a734aa/dados/git/agrocarbon/venv/bin/python3
+# -*- coding: utf-8 -*-
+import re
+import sys
+from charset_normalizer import cli
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(cli.cli_detect())
