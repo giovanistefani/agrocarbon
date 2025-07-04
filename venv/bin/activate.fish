@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /media/giovani/b60fac53-771c-4765-bb57-46eba1a734aa/dados/git/agrocarbon/venv
+set -gx VIRTUAL_ENV /home/giovani/git/agrocarbon/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH
