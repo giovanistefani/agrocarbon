@@ -1,8 +1,7 @@
-ALTER TABLE agrocarbon.produtores
-ADD COLUMN rua VARCHAR(255),
-ADD COLUMN numero VARCHAR(20),
-ADD COLUMN complemento VARCHAR(100),
-ADD COLUMN bairro VARCHAR(100),
-ADD COLUMN cidade VARCHAR(100),
-ADD COLUMN estado VARCHAR(50),
-ADD COLUMN cep VARCHAR(20);
+CREATE TABLE agrocarbon.propriedade_produtor (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    propriedade_id INT NOT NULL,
+    produtor_id INT NOT NULL,
+    FOREIGN KEY (propriedade_id) REFERENCES propriedades(id),
+    FOREIGN KEY (produtor_id) REFERENCES produtores(id)
+);

@@ -3,15 +3,12 @@ from utils.persistencia import hash_password, carregar_usuarios, get_user_id_by_
 from modules.cadastro_usuario import show_register_screen
 from modules.esqueci_senha import show_forgot_password_screen, show_reset_password_screen
 from modules.cadastro_produtor import show_produtor_screen
+from modules.cadastro_propriedade import show_propriedades_screen
 
 # --- Telas do app ---
 def show_home_screen():
     st.title("Bem-vindo à Plataforma Terra que Vale")
     st.write("Escolha uma opção no menu à esquerda.")
-
-def show_propriedades_screen():
-    st.title("Cadastro de Propriedades")
-    st.write("Tela de cadastro de propriedades.")
 
 # --- Lógica de Controle de Acesso ---
 def show_login_screen():
