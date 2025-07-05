@@ -4,13 +4,22 @@ import mysql.connector
 from mysql.connector import Error
 import secrets
 from datetime import datetime, timedelta
+from sqlalchemy import create_engine
+
+# Engine global para uso com pandas
+SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://root:Gb$127311@localhost/agrocarbon"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 def get_connection():
+    """
+    Retorna conexão DBAPI2 para uso com cursor (inserts/updates),
+    mas use 'engine' para pandas.read_sql.
+    """
     return mysql.connector.connect(
         host='localhost',
-        user='root',  # ajuste para seu usuário
-        password='Gb$127311',  # ajuste para sua senha
-        database='agrocarbon'  # ajuste para seu banco
+        user='root',
+        password='Gb$127311',
+        database='agrocarbon'
     )
 
 def hash_password(password: str) -> str:
@@ -18,10 +27,8 @@ def hash_password(password: str) -> str:
 
 def carregar_usuarios():
     try:
-        conn = get_connection()
         query = "SELECT username, password_hash FROM usuarios"
-        df = pd.read_sql(query, conn)
-        conn.close()
+        df = pd.read_sql(query, engine)
         return df
     except Error as e:
         print(f"Erro ao carregar usuários: {e}")
@@ -154,14 +161,12 @@ def listar_usuarios():
 
 def listar_produtores():
     try:
-        conn = get_connection()
         query = '''
             SELECT p.id, p.nome, p.documento, p.rua, p.numero, p.complemento, p.bairro, p.cidade, p.estado, p.cep, p.user_id, u.username
             FROM produtores p
             JOIN usuarios u ON p.user_id = u.id
         '''
-        df = pd.read_sql(query, conn)
-        conn.close()
+        df = pd.read_sql(query, engine)
         return df
     except Exception as e:
         print(f"Erro ao listar produtores: {e}")
@@ -169,9 +174,7 @@ def listar_produtores():
 
 def listar_usuarios_df():
     try:
-        conn = get_connection()
-        df = pd.read_sql("SELECT id, username, email FROM usuarios", conn)
-        conn.close()
+        df = pd.read_sql("SELECT id, username, email FROM usuarios", engine)
         return df
     except Exception as e:
         print(f"Erro ao listar usuários: {e}")
@@ -179,9 +182,7 @@ def listar_usuarios_df():
 
 def listar_propriedades():
     try:
-        conn = get_connection()
-        df = pd.read_sql("SELECT * FROM propriedades", conn)
-        conn.close()
+        df = pd.read_sql("SELECT * FROM propriedades", engine)
         return df
     except Exception as e:
         print(f"Erro ao listar propriedades: {e}")
@@ -277,7 +278,6 @@ def listar_propriedades_com_produtores():
     Retorna um DataFrame com colunas: id, nome, cidade, estado, tamanho, produtores (lista de nomes)
     """
     try:
-        conn = get_connection()
         query = '''
             SELECT p.id, p.nome, p.cidade, p.estado, p.tamanho,
                    GROUP_CONCAT(pr.nome SEPARATOR ', ') as produtores
@@ -286,8 +286,7 @@ def listar_propriedades_com_produtores():
             LEFT JOIN produtores pr ON pp.produtor_id = pr.id
             GROUP BY p.id, p.nome, p.cidade, p.estado, p.tamanho
         '''
-        df = pd.read_sql(query, conn)
-        conn.close()
+        df = pd.read_sql(query, engine)
         return df
     except Exception as e:
         print(f"Erro ao listar propriedades com produtores: {e}")
